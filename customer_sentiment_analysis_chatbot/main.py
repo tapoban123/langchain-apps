@@ -1,5 +1,5 @@
 import streamlit as st
-from gen_ai.sentiment_analysis import get_response
+from gen_ai.sentiment_analysis import generate_content
 
 st.title("Customer Sentiment Analysis Chatbot")
 
@@ -22,4 +22,19 @@ get_response = st.button(label="Analyze")
 
 if get_response:
     if st.session_state[user_feedback] is not None:
-        st.markdown(st.session_state[user_feedback])
+        response = generate_content(st.session_state[user_feedback])
+        
+        if response.get("sentiment") ==  "positive":
+            st.markdown(f"### Message")
+            st.markdown(response.get('feedback_response'))
+            
+        else:
+            st.markdown(f"### Message for the user:")
+            st.markdown(response.get('feedback_response'))
+            
+            st.markdown(f"\n\n### Key Concerns:")
+           
+            concern_count = 1 
+            for concern in response.get("key_concerns"):
+                st.markdown(f"{concern_count}. {concern}")
+                concern_count += 1
