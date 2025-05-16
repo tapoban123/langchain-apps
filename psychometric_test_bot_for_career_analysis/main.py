@@ -83,25 +83,26 @@ if submitted:
     st.write("Form submitted")
 
     with st.status(label="Analyzing your responses..."):
-        st.session_state.careers = process_response(st.session_state["question_answers"])
+        st.session_state.careers = process_response(
+            st.session_state["question_answers"]
+        )
 
-    
     # st.write(st.session_state.careers)
-    
+
     col1, col2 = st.columns(2)
     
+    st.divider()
+
     with col1:
         st.subheader("Most suitable career options for you are:")
-        
+
         for career in st.session_state.careers["careers"]:
             career_val = career["career"]
             reason = career["reason"]
             with st.expander(career_val):
                 st.write(f"\t* {reason}")
             # st.markdown(f"* {career.get("career")}")
-            
-            
+
     with col2:
         st.subheader("Your aptitude parameters(Out of 10):")
         st.write(st.session_state.careers["aptitude_parameters"])
-        
