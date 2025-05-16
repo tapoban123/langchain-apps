@@ -1,7 +1,7 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import PromptTemplate
-from .models import QuestionParserList
+from .models import QuestionParserList, CareersList
 from pydantic import BaseModel
 
 from enums import API_KEYS, LLM_MODELS
@@ -38,6 +38,32 @@ def generate_questions():
 
 def process_response(user_response: dict):
     llm = get_llm()
+
+    career_parser = PydanticOutputParser(pydantic_object=CareersList)
+
+    template = """
+    You are a career guidance expert. You will be given a dictionary where each entry contains:
+    1. A question related to the user's personality or interests,
+    2. A list of options the user could choose from,
+    3. The user's selected answer.
+
+    Use this psychometric data to analyze the user's traits, interests, and preferences, and based on that, suggest the 3 most suitable career paths for the user. Make sure your response is personalized, insightful, and easy to understand.
+    Here is the dictionary:\n{user_answers}\n{format_instructions}
+    """
+
+    prompt_template = PromptTemplate(
+        template=template,
+        input_variables=["user_answers"],
+        partial_variables={
+            "format_instructions": career_parser.get_format_instructions()
+        },
+    )
+
+    chain = prompt_template | llm | career_parser
+
+    result: BaseModel = chain.invoke({"user_answers": user_response})
+
+    return result.model_dump()
 
 
 # generate_questions()

@@ -10,3 +10,7 @@ class QuestionParser(BaseModel):
 
 class QuestionParserList(BaseModel):
     questions: list[QuestionParser]
+
+
+class CareersList(BaseModel):
+    careers: list[str] = Field(description="List containing the 3 most suitable careers of the user.")

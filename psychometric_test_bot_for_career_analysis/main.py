@@ -1,34 +1,91 @@
 import streamlit as st
-from questions_gen.ai_generator import generate_questions
+from questions_gen.ai_generator import generate_questions, process_response
 
 
 st.title("Psychometric Test")
 
 submitted: str
 
-question_one = {
+question_numbers = [
+    "question_one",
+    "question_two",
+    "question_three",
+    "question_four",
+    "question_five",
+    "question_six",
+    "question_seven",
+    "question_eight",
+    "question_nine",
+    "question_ten",
+]
+
+user_answers_dict = {
     "question": "",
     "options": "",
     "user_answer": "",
 }
 
+session_vars = [
+    "questions",
+    "question_answers",
+    "questions_count",
+    "careers",
+]
 
-if "questions" not in st.session_state:
-    st.session_state.questions = []
+for var in session_vars:
+    if var not in st.session_state:
+        print("Declaring session states")
+        st.session_state[var] = None
 
+if st.session_state["question_answers"] is None:
+    st.session_state["question_answers"] = {
+        key: user_answers_dict.copy() for key in question_numbers
+    }
+
+if st.session_state["questions_count"] is None:
+    st.session_state["questions_count"] = 0
 
 with st.status(label="Generating questions"):
-    if len(st.session_state.questions) == 0:
+    if st.session_state.questions is None:
         questions_json = generate_questions()
-        print(questions_json)
+        print("Generating questions.")
         st.session_state.questions = questions_json
 
+        count = 0
+        for question in st.session_state.questions:
+            st.session_state["question_answers"][question_numbers[count]][
+                "question"
+            ] = question["question"]
+
+            st.session_state["question_answers"][question_numbers[count]]["options"] = (
+                question["options"]
+            )
+
+            count += 1
+
+
 with st.form("questions_form"):
+    count = 0
     for question in st.session_state.questions:
-        st.selectbox(question["question"], options=question["options"])
+        st.session_state["question_answers"][question_numbers[count]]["user_answer"] = (
+            st.selectbox(
+                question["question"],
+                options=question["options"],
+            )
+        )
+
+        count += 1
 
     submitted = st.form_submit_button(label="Submit")
 
 
 if submitted:
     st.write("Form submitted")
+
+    with st.status(label="Analyzing your responses..."):
+        st.session_state.careers = process_response(st.session_state["question_answers"])
+
+    st.header("Most suitable career options for you are:")
+    st.write(st.session_state.careers)
+    # for career in st.session_state.careers:
+    #     st.markdown(f"* {career}")
