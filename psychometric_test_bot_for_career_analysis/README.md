@@ -1,5 +1,7 @@
 # Psychometric Test bot for Career Analysis
 
+[**Try out the AI Bot on Streamlit Cloud**](https://mainpy-ery2ds9wwuxh7cicqonjsh.streamlit.app/)
+
 ## Workflow
 1. Generate psychometric questions using an LLM.
 2. User answers each question.

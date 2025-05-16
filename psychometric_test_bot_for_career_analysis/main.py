@@ -2,7 +2,7 @@ import streamlit as st
 from questions_gen.ai_generator import generate_questions, process_response
 
 
-st.title("Psychometric Test")
+st.title("Psychometric Test for Career Analysis")
 
 submitted: str
 
