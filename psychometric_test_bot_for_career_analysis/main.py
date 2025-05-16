@@ -81,6 +81,8 @@ with st.form("questions_form"):
 
 if submitted:
     st.write("Form submitted")
+    
+    st.divider()
 
     with st.status(label="Analyzing your responses..."):
         st.session_state.careers = process_response(
@@ -91,7 +93,6 @@ if submitted:
 
     col1, col2 = st.columns(2)
     
-    st.divider()
 
     with col1:
         st.subheader("Most suitable career options for you are:")
