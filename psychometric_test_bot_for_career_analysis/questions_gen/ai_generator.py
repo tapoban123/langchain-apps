@@ -46,8 +46,18 @@ def process_response(user_response: dict):
     1. A question related to the user's personality or interests,
     2. A list of options the user could choose from,
     3. The user's selected answer.
+    
+    Analyze the user's responses to score their aptitude across the following key areas (score out of 10 for each):
 
-    Use this psychometric data to analyze the user's traits, interests, and preferences, and based on that, suggest the 3 most suitable career paths for the user. Make sure your response is personalized, insightful, and easy to understand.
+    1. Logical Reasoning
+    2. Numerical Ability
+    3. Verbal Ability
+    4. Abstract/Spatial Reasoning
+    5. Mechanical Reasoning
+    6. Creativity
+    7. Attention to Detail
+    8. Personality & Interests Alignment
+    After scoring, suggest 3 most suitable career paths for the user based on their overall aptitude and psychometric profile. Include a short reason for each career choice. Make sure your response is personalized, insightful, and easy to understand.
     Here is the dictionary:\n{user_answers}\n{format_instructions}
     """
 
